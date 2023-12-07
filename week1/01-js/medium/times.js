@@ -7,7 +7,7 @@ Try running it for
 Hint - use Date class exposed in JS
 There is no automated test for this one, this is more for you to understand time goes up as computation goes up
 */
-function getTime() {
+function getCurrentTime() {
     const now = new Date()
     const hour = now.getHours().toString().padStart(2,"0")
     const min = now.getMinutes().toString().padStart(2,"0")
@@ -17,13 +17,19 @@ function getTime() {
 }
 
 function calculateTime(n) {
-    console.log(getTime());
 
+    // let startTime = new Date().getTime();
+    let startTime = performance.now();
+    
     let sum = 0;
     for (let i = 0; i < n; i++) {
         sum+=i;
     }
-    console.log(getTime());
+
+    let endTime = performance.now();
+    // const elapsedTime = endTime - startTime;
+    const elapsedTime = endTime - startTime;
+    console.log(elapsedTime)
 }
 
-calculateTime(10000)
+calculateTime(10000000)
