@@ -37,7 +37,7 @@ class Calculator {
     if (num !== 0) {
       this.result /= num;
     } else {
-      throw new Error("can't divide by 0")
+      throw new Error("Can't divide by 0");
     }
   }
 
@@ -50,12 +50,96 @@ class Calculator {
   }
 
   calculate(expression) {
-    // Remove multiple spaces, if present and evaluate the expression.
-    this.result = eval(expression.replace(/\s+/g, " "));
-    // Check Infinity
-    if (this.result === Infinity) {
-      throw new Error("Infinity");
+    // input validation
+    if (!/^[0-9+\-*/().\s]+$/.test(expression)) {
+      throw new Error("Invalid expression");
     }
+
+    // tokenize the exp
+    const tokens = expression.match(/(\d+\.\d+|\d+|[+\-*/().])/g);
+
+    if (!tokens) {
+      throw new Error("Invalid expression");
+    }
+
+    // no evaluation = no value 
+    this.result = 0;
+
+    // tracking num nd op
+    const numStack = [];
+    const opStack = [];
+    let currentOperation = "+";
+
+    // helper fn
+    const performOperation = (num1, num2, operation) => {
+      switch (operation) {
+        case "+":
+          return num1 + num2;
+        case "-":
+          return num1 - num2;
+        case "*":
+          return num1 * num2;
+        case "/":
+          if (num2 === 0) {
+            throw new Error("Can't divide by 0");
+          }
+          return num1 / num2;
+        default:
+          throw new Error("Invalid operation");
+      }
+    };
+
+    // eval each token
+    for (const token of tokens) {
+      if (/(\d+\.\d+|\d+)/.test(token)) {
+        const num = parseFloat(token);
+        numStack.push(num);
+      } else if ("+-*/".includes(token)) {
+        // checking precedence
+        while (
+          opStack.length > 0 &&
+          ["*", "/"].includes(opStack[opStack.length - 1])
+        ) {
+          const prevNum = numStack.pop();
+          const prevOperation = opStack.pop();
+          numStack[numStack.length - 1] = performOperation(
+            numStack[numStack.length - 1],
+            prevNum,
+            prevOperation
+          );
+        }
+        opStack.push(token);
+      } else if (token === "(") {
+        opStack.push(token);
+      } else if (token === ")") {
+        // Perform operations inside parentheses
+        while (opStack[opStack.length - 1] !== "(") {
+          const prevNum = numStack.pop();
+          const prevOperation = opStack.pop();
+          numStack[numStack.length - 1] = performOperation(
+            numStack[numStack.length - 1],
+            prevNum,
+            prevOperation
+          );
+        }
+        opStack.pop(); // Remove the "(" from the stack
+      }
+    }
+
+    // Perform any remaining operations
+    while (opStack.length > 0) {
+      const prevNum = numStack.pop();
+      const prevOperation = opStack.pop();
+      numStack[numStack.length - 1] = performOperation(
+        numStack[numStack.length - 1],
+        prevNum,
+        prevOperation
+      );
+    }
+
+    // The final result is at the top of the numStack
+    this.result = numStack[0];
+
     return this.result;
   }
 }

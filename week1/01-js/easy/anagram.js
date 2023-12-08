@@ -17,6 +17,7 @@ function isAnagram(str1, str2) {
   str2 = str2.split('').sort().join('')
 
   return str1 === str2
+
 }
 
 module.exports = isAnagram;
