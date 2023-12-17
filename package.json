@@ -1,0 +1,16 @@
+{
+  "name": "100xdevs",
+  "version": "1.0.0",
+  "description": "- Basics of HTML and CSS\r   - Assignment/Class - [Zerodha Landing Page](https://github.com/knotsid/100xDevs/tree/master/week0/Zerodha_Landing_Page)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "zod": "^3.22.4"
+  }
+}
