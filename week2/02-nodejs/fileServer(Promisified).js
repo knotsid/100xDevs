@@ -13,7 +13,7 @@
     Testing the server - run `npm run test-fileServer` command in terminal
  */
 const express = require('express');
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 const app = express();
 const PORT = 3000
@@ -21,26 +21,31 @@ const PORT = 3000
 const filesDir = './files/'
 
 // Endpoint 1: GET /files
-app.get('/files', function (req, res) {
-  fs.readdir(path.join(__dirname, './files/'), (err, files) => {
-    if (err) {
-      return res.status(500).json({ error: 'Failed to retrieve files' });
-    }
-    res.json(files);
-  });
-});
+app.get('/files', async function (req, res) {
+  try {
+    const files = await fs.readdir(filesDir);
+    res.status(200).json(files);
+  } catch (error) {
+    res.status(500).send('Internal server error');
+  }
+})
 
 // Endpoint 2: GET /file/:filename
-app.get('/file/:filename', function (req, res) {
-  const filepath = path.join(__dirname, './files/', req.params.filename);
-
-  fs.readFile(filepath, 'utf8', (err, data) => {
-    if (err) {
-      return res.status(404).send('File not found');
+app.get('/file/:filename', async function (req, res) {
+  const fileName = req.params.filename
+  const filePath = path.join(filesDir, fileName)
+  try {
+    const data = await fs.readFile(filePath, 'utf-8')
+    res.status(200).send(data)
+  } catch (err) {
+    // console.error('Error reading file:', err);
+    if (err.code === 'ENOENT') {
+      res.status(404).send('File not found');
+    } else {
+      res.status(500).send('Internal server error');
     }
-    res.send(data);
-  });
-});
+  }
+})
 
 // Default 404 handler for undefined routes
 app.use((req, res) => {
@@ -48,8 +53,8 @@ app.use((req, res) => {
 });
 
 // start the server
-// app.listen(PORT, function () {
-//   console.log(`server running on port : ${PORT}`)
-// })
+app.listen(PORT, function () {
+  console.log(`server running on port : ${PORT}`)
+})
 
 module.exports = app;
