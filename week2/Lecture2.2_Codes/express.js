@@ -1,32 +1,32 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const app = express();
 
-app.use(bodyParser.json)
+app.use(bodyParser.json())
 
-app.get('/', function(req,res){
+app.get('/', function (req, res) {
      res.send("moye moye")
 })
 
-app.get('/test-json', function(req,res){
+app.get('/test-json', function (req, res) {
      res.json({
           name: "notsid",
           age: 22
      })
 })
 
-app.get('/test-html', function(req,res){
+app.get('/test-html', function (req, res) {
      res.send("<h1>JS is fun</h1>")
 })
 
-app.get('/js', function(req,res){
+app.get('/js', function (req, res) {
      res.send("js is fun")
 })
 
 // ########### POST REQUESTS ##################
 
-app.post('/test-header', function(req,res){
+app.post('/test-header', function (req, res) {
      // adding auth header as 123 in postman
      console.log(req.headers)
      res.send({
@@ -48,6 +48,6 @@ app.post('/test-header', function(req,res){
      console.log(req.body)    // client side input 
 })
 
-app.listen(PORT, function(){
+app.listen(PORT, function () {
      console.log(`server listening on port : ${PORT}`)
 })
