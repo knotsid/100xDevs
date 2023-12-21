@@ -2,6 +2,7 @@ const app = require("../01-requestcount");
 
 const request = require('supertest');
 const assert = require('assert');
+
 describe('GET /user', function() {
   it('One request responds with 1', function(done) {
     request(app)
