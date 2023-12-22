@@ -5,7 +5,7 @@
  */
 
 
-function wait1(t) {
+function waitOneSecond(t) {
      return new Promise((resolve, reject) => {
           setTimeout(() => {
                resolve("First Promise");
@@ -13,7 +13,7 @@ function wait1(t) {
      });
 }
 
-function wait2(t) {
+function waitTwoSecond(t) {
      return new Promise((resolve, reject) => {
           setTimeout(() => {
                resolve("Second Promise");
@@ -21,7 +21,7 @@ function wait2(t) {
      });
 }
 
-function wait3(t) {
+function waitThreeSecond(t) {
      return new Promise((resolve, reject) => {
           setTimeout(() => {
                resolve("Third Promise");
@@ -29,11 +29,19 @@ function wait3(t) {
      });
 }
 
-async function calculateTime(t1, t2, t3) {
-     const currTime = Date.now();
-     await Promise.all([wait1(t1), wait2(t2), wait3(t3)]);
-     const newTime = Date.now();
-     return newTime - currTime;
- }
+function calculateTime(t1, t2, t3) {
+     const startTime = new Date().getTime();
+
+     return Promise.all([waitOneSecond(t1), waitTwoSecond(t2), waitThreeSecond(t3)]).then(
+          (result) => {
+               const endTime = new Date().getTime();
+               console.log(result);
+               console.log(
+                    `took ${endTime - startTime} milliseconds to resolve all promises`
+               );
+               return endTime - startTime;
+          }
+     );
+}
 
 module.exports =  calculateTime ;
