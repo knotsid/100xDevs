@@ -42,7 +42,8 @@
 
                // using await bcoz .then is confusing for me
                // since using await, we have to use async in function
-               const res = await fetch('http://localhost:3000/?p=' + p + '&r=' + r + '&t=' + t)
+               // const res = await fetch('http://localhost:3000/?p=' + p + '&r=' + r + '&t=' + t)
+               const res = await fetch(`http://localhost:3000/?p=${p}&r=${r}&t=${t}`);
                console.log(res)
                // have to do .text bcoz thats how fetch is written as fetch returns a Response object 
                const ans = await res.text()
