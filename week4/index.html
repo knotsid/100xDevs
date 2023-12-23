@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Document</title>
+     <script>
+          function tester() {
+               // alert("hi") // check working
+               // document.getElementById("result").innerHTML = "Hello world"
+               const element = document.getElementById("result")
+               // console.log(typeof element)
+               element.innerHTML = "Hello world"
+          }
+          function populateDiv(params) {
+               // how u know to use .value (goomgle)
+               const a = document.getElementById("num1").value
+               const b = document.getElementById("num2").value
+               // const sum = parseInt(a) + parseInt(b)
+               // document.getElementById("result").innerHTML = 'The sum is : ' + sum
+               const res = fetch('https://sum-server.100xdevs.com/sum?a=' + a + '&b=' + b)
+               // console.log(res)
+               res.then(function (response) {
+                    console.log(response)
+
+                    response.text()
+                         .then(function (ans) {
+                              document.getElementById('result').innerHTML = ans
+                         }
+                         )
+               })
+          }
+          async function populateDiv2() {
+               // how u know to use .value (goomgle)
+               const p = document.getElementById("num1").value
+               const r = document.getElementById("num2").value
+               const t = document.getElementById("num3").value
+
+               // using same structure of url as we did in populateDiv
+               // const res = fetch('https://sum-server.100xdevs.com/sum?a=' + a + '&b=' + b)
+
+               // using await bcoz .then is confusing for me
+               // since using await, we have to use async in function
+               const res = await fetch('http://localhost:3000/?p=' + p + '&r=' + r + '&t=' + t)
+               console.log(res)
+               // have to do .text bcoz thats how fetch is written as fetch returns a Response object 
+               const ans = await res.text()
+               document.getElementById("result").innerHTML = ans
+          }
+     </script>
+</head>
+
+<body>
+
+     <input type="text" name="" id="num1" placeholder="p"><br><br>
+     <input type="text" name="" id="num2" placeholder="r"><br><br>
+     <input type="text" name="" id="num3" placeholder="t"><br><br>
+     <button onclick="populateDiv2()">calculate </button><br><br>
+     <div id="result"></div>
+</body>
+
+</html>
