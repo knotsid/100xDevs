@@ -24,7 +24,7 @@ app.use(function (req, res, next) {
 
   // if number of request is exceeded
   if (numberOfRequestsForUser[userId] >= requestLimit) {
-    return res.status(404).json({ error: 'Rate milit exceeded' })
+    return res.status(404).json({ error: 'Rate limit exceeded' })
   }
 
   // if num of req is within limit then increment
