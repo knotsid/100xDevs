@@ -13,28 +13,27 @@ const app = express();
 
 // config
 let numberOfRequestsForUser = {};
-const requestLimit = 5;
-const timewindow = 1000;
+setInterval(() => {
+  numberOfRequestsForUser = {};
+}, 1000)
 
 app.use(function (req, res, next) {
   const userId = req.headers['user-id']
 
-  // if new user, then making no of req = 0
-  numberOfRequestsForUser[userId] = numberOfRequestsForUser[userId] || 0;
-
-  // if number of request is exceeded
-  if (numberOfRequestsForUser[userId] >= requestLimit) {
-    return res.status(404).json({ error: 'Rate limit exceeded' })
+  // counting the request made
+  if (numberOfRequestsForUser[userId]) {
+    numberOfRequestsForUser[userId] += 1;
+    // if number of request is exceeded
+    if (numberOfRequestsForUser[userId] > 5) {
+      return res.status(404).json({ error: 'Rate limit exceeded' })
+    }
+    else {
+      next()
+    }
+  } else { // if new user, then making no of req = 0
+    numberOfRequestsForUser[userId] = 1;
+    next()
   }
-
-  // if num of req is within limit then increment
-  numberOfRequestsForUser[userId]++;
-
-  setInterval(() => {
-    numberOfRequestsForUser[userId] = 0;
-  }, timewindow);
-
-  next();
 })
 
 
